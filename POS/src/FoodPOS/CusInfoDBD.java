@@ -115,7 +115,7 @@ public class CusInfoDBD extends JFrame {
 			}
 		});
 		salesButt.setBorderPainted(false);
-		salesButt.setIcon(new ImageIcon("D:\\Eclipse\\My Workspace\\POS\\src\\Des\\Assets\\icons8-cashier-23.png"));
+		salesButt.setIcon(new ImageIcon(getClass().getResource("icons8-cashier-23.png")));
 		salesButt.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
 		salesButt.setContentAreaFilled(false);
 		salesButt.setFocusable(false);
@@ -136,7 +136,7 @@ public class CusInfoDBD extends JFrame {
 			}
 		});
 		cusinfoButt.setBorderPainted(false);
-		cusinfoButt.setIcon(new ImageIcon("D:\\Eclipse\\My Workspace\\POS\\src\\Des\\Assets\\icons8-customer-23.png"));
+		cusinfoButt.setIcon(new ImageIcon(getClass().getResource("icons8-customer-23.png")));
 		cusinfoButt.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
 		cusinfoButt.setContentAreaFilled(false);
 		cusinfoButt.setFocusable(false);
@@ -157,8 +157,7 @@ public class CusInfoDBD extends JFrame {
 			}
 		});
 		inventoryButt.setBorderPainted(false);
-	   
-		inventoryButt.setIcon(new ImageIcon("D:\\Eclipse\\My Workspace\\POS\\src\\Des\\Assets\\icons8-in-inventory-22.png"));
+		inventoryButt.setIcon(new ImageIcon(getClass().getResource("icons8-in-inventory-22.png")));
 		inventoryButt.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
 		inventoryButt.setContentAreaFilled(false);
 		inventoryButt.setFocusable(false);

@@ -130,7 +130,7 @@ public class SalesDBD extends JFrame {
 		salesButt.setHideActionText(true);
 		salesButt.setBorderPainted(false);
 		salesButt.setIconTextGap(10);
-		salesButt.setIcon(new ImageIcon("D:\\Eclipse\\My Workspace\\POS\\src\\Des\\Assets\\icons8-cashier-23.png"));
+		salesButt.setIcon(new ImageIcon(getClass().getResource("icons8-cashier-23.png")));
 		salesButt.setFont(new Font("SansSerif", Font.PLAIN, 12));
 		salesButt.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
 		salesButt.setContentAreaFilled(false);
@@ -153,7 +153,7 @@ public class SalesDBD extends JFrame {
 			}
 		});
 		inventoryButt.setBorderPainted(false);
-		inventoryButt.setIcon(new ImageIcon("D:\\Eclipse\\My Workspace\\POS\\src\\Des\\Assets\\icons8-in-inventory-22.png"));
+		inventoryButt.setIcon(new ImageIcon(getClass().getResource("icons8-in-inventory-22.png")));
 		inventoryButt.setFont(new Font("SansSerif", Font.PLAIN, 12));
 		inventoryButt.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
 		inventoryButt.setContentAreaFilled(false);
@@ -174,7 +174,7 @@ public class SalesDBD extends JFrame {
 			}
 		});
 		cusinfoButt.setBorderPainted(false);
-		cusinfoButt.setIcon(new ImageIcon("D:\\Eclipse\\My Workspace\\POS\\src\\Des\\Assets\\icons8-customer-23.png"));
+		cusinfoButt.setIcon(new ImageIcon(getClass().getResource("icons8-customer-23.png")));
 		cusinfoButt.setFont(new Font("SansSerif", Font.PLAIN, 12));
 		cusinfoButt.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
 		cusinfoButt.setContentAreaFilled(false);
