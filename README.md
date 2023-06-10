@@ -43,10 +43,13 @@ and run it using Administrator.
 --> Thats it.
 
 
+## UPDATES 
+--> ADD TWO USER TYPE
+--> FIX MISSING ICONS
+--> OPTIMIZE SOME CODES
 
 
 
- 
 ## Installation
 
 CLICK HERE : 
