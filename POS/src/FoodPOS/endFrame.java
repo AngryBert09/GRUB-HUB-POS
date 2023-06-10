@@ -13,13 +13,14 @@ import java.awt.event.MouseEvent;
 import java.awt.Cursor;
 import java.awt.Font;
 
-public class endFrame extends JFrame {
+public class endFrame extends JFrame implements DataListener {
 
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
 	private JPanel contentPane;
+	private String data;
 
 	/**
 	 * Launch the application.
@@ -40,6 +41,14 @@ public class endFrame extends JFrame {
 	/**
 	 * Create the frame.
 	 */
+	@Override
+	public void onDataReceived(String data) {
+        // Process the received data
+        this.data = data;
+        System.out.println("\nReceived data: " + data);
+
+    }
+	
 	public endFrame() {
 		setUndecorated(true);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -55,8 +64,11 @@ public class endFrame extends JFrame {
 		lblNewLabel.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
+				SalesDBD sales = new SalesDBD();
+				sales.onDataReceived(data);
+				sales.setLocationRelativeTo(null);
+				sales.setVisible(true);
 				dispose();
-				new OwnLib().spawnFrame(new SalesDBD());
 			}
 		});
 		lblNewLabel.setBounds(196, 215, 64, 74);

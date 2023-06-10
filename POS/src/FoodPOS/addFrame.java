@@ -2,6 +2,7 @@ package FoodPOS;
 
 import java.awt.EventQueue;
 
+
 import java.awt.Image;
 
 import javax.swing.ImageIcon;
@@ -35,14 +36,19 @@ import Des.*;
 
 
 
-public class addFrame extends JFrame {
+public class addFrame extends JFrame implements DataListener {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -5715826502266087763L;
 	private JPanel contentPane;
 	private JTextField prodNameTF;
 	private JTextField stockTF;
 	private JTextField priceTF;
 	private Connection con;
 	private byte[] imageData ;
+  
 	/**
 	 * Launch the application.
 	 */
@@ -53,6 +59,15 @@ public class addFrame extends JFrame {
 	private String getTextFromField(JTextField textField) {
 	    return textField.getText().trim();
 	}
+	
+	@Override
+	public void onDataReceived(String data) {
+        // Process the received data
+		
+        System.out.println("\nReceived data: " + data);
+
+    }
+	
 	
 	public static void main(String[] args) {
 		EventQueue.invokeLater(new Runnable() {
@@ -249,7 +264,10 @@ public class addFrame extends JFrame {
 					 PS.setBytes(4, imageData);
 					 PS.executeUpdate();
 					 JOptionPane.showMessageDialog(null, "SUCCESSFULLY ADDED");
-					 new OwnLib().spawnFrame(new InventoryDBD());
+					 InventoryDBD invent = new InventoryDBD();
+				     invent.onDataReceived("Admin");
+				     invent.setLocationRelativeTo(null);
+				     invent.setVisible(true);
 					 dispose();
 				
 					
@@ -261,24 +279,7 @@ public class addFrame extends JFrame {
 					e1.printStackTrace();
 				}
 				
-				
-				
-				
-				
-				
-				
-				
-				
-				
-				
-				
-				
-				
-				
-				
-				
-				
-				
+
 			
 		}});
 		addButt.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
@@ -296,7 +297,10 @@ public class addFrame extends JFrame {
 		exitButt.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
 		exitButt.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				new OwnLib().spawnFrame(new InventoryDBD());
+				InventoryDBD invent = new InventoryDBD();
+				invent.onDataReceived("Admin");
+				invent.setLocationRelativeTo(null);
+				invent.setVisible(true);
 				dispose();
 			}
 		});

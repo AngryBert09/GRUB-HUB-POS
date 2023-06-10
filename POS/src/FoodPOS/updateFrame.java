@@ -34,13 +34,14 @@ import java.awt.event.ActionEvent;
 import javax.swing.SwingConstants;
 import javax.swing.JComboBox;
 
-public class updateFrame extends JFrame {
+public class updateFrame extends JFrame implements DataListener {
 
 	private JPanel contentPane;
 	private JTextField productidTF;
 	private byte[] imageData ;
 	private Connection con;
 	private JTextField newValueTF;
+
 
 	/**
 	 * Launch the application.
@@ -49,6 +50,15 @@ public class updateFrame extends JFrame {
 	private void setTextFieldBorder(JTextField textField) {
 	    textField.setBorder(new MatteBorder(1, 1, 1, 1, (Color) new Color(255, 0, 0)));
 	}
+	
+	@Override
+	public void onDataReceived(String data) {
+        // Process the received data
+		
+        System.out.println("\nReceived data: " + data);
+
+    }
+	
 	
 	public static void main(String[] args) {
 		EventQueue.invokeLater(new Runnable() {
@@ -187,91 +197,97 @@ public class updateFrame extends JFrame {
 		uploadButt.setBounds(121, 133, 89, 23);
 		contentPane.add(uploadButt);
 		
-		JButton btnNewButton_1 = new JButton("BACK");
-		btnNewButton_1.addActionListener(new ActionListener() {
+		JButton backButt = new JButton("BACK");
+		backButt.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				new OwnLib().spawnFrame(new InventoryDBD());
+				InventoryDBD invent = new InventoryDBD();
+				invent.onDataReceived("Admin");
+				invent.setLocationRelativeTo(null);
+				invent.setVisible(true);
 				dispose();
 			}
 		});
-		btnNewButton_1.setForeground(Color.WHITE);
-		btnNewButton_1.setBorder(new MatteBorder(1, 1, 1, 1, (Color) new Color(0, 0, 0)));
-		btnNewButton_1.setBackground(Color.DARK_GRAY);
-		btnNewButton_1.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
-		btnNewButton_1.setFocusable(false);
-		btnNewButton_1.setFocusTraversalKeysEnabled(false);
-		btnNewButton_1.setFocusPainted(false);
-		btnNewButton_1.setFont(new Font("Bahnschrift", Font.PLAIN, 14));
-		btnNewButton_1.setBounds(121, 202, 89, 23);
-		contentPane.add(btnNewButton_1);
+		backButt.setForeground(Color.WHITE);
+		backButt.setBorder(new MatteBorder(1, 1, 1, 1, (Color) new Color(0, 0, 0)));
+		backButt.setBackground(Color.DARK_GRAY);
+		backButt.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+		backButt.setFocusable(false);
+		backButt.setFocusTraversalKeysEnabled(false);
+		backButt.setFocusPainted(false);
+		backButt.setFont(new Font("Bahnschrift", Font.PLAIN, 14));
+		backButt.setBounds(121, 202, 89, 23);
+		contentPane.add(backButt);
 		
 		JButton updateButt = new JButton("UPDATE");
 		updateButt.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				int productID = Integer.parseInt(productidTF.getText());
-				String newValue = newValueTF.getText();
-				String item = (String) comboBox.getSelectedItem();
-				System.out.print(item);
-				boolean noProb = true;
-			
-				 try {
-						Class.forName("com.mysql.cj.jdbc.Driver");
-						 con = DriverManager.getConnection("jdbc:mysql://localhost:3306/grubhub", "root", "");
-						 PreparedStatement PS = con.prepareStatement("UPDATE producttbl SET " + item + " = ? WHERE `Product ID` = ?" );
-						 UserDao check = new UserDao(con);
-						 
-						 //Check if field is empty
-						 if(productidTF.getText().isEmpty()== true || newValue.isEmpty()) {
-							 
-                                  warningLBL.setText("EMPTY FIELD");
-                                  warningLBL.setVisible(true);
-                                  noProb = false;
-                                  
-						 } 
-						 
-						 if (check.isIdExists(productidTF.getText()) == false) {
-							 
-                             warningLBL.setText("ID DOES NOT EXIST");
-                             warningLBL.setVisible(true);
-                             noProb = false;
-                         
-						 } 
-						 
-						 if (noProb) {
-						  switch (item) {
-					        case "ProductName":
-					            PS.setString(1, newValue);
-					            break;
-					        case "Stock":
-					            PS.setInt(1, Integer.parseInt(newValue));
-					            break;
-					        case "Price":
-					            PS.setDouble(1, Double.parseDouble(newValue));
-					            break;
-					        case "Image":
-					            PS.setBytes(1, imageData);
-					            break;
-					        default:
-					            break;
-					    }
-					    
-					    PS.setInt(2, productID);
-					    int rowsUpdated = PS.executeUpdate();
-					    if (rowsUpdated > 0) {
-					        JOptionPane.showMessageDialog(null, "SUCCESSFULLY UPDATED");
-					        new OwnLib().spawnFrame(new InventoryDBD());
-					        dispose();
-					        
-					    } else {
-					        warningLBL.setText("FAILED TO UPDATE");
-					        warningLBL.setVisible(true);
-					    }
-					   
-						 }	 
-						 } catch (ClassNotFoundException | SQLException e1) {
+							int productID = Integer.parseInt(productidTF.getText());
+							String newValue = newValueTF.getText();
+							String item = (String) comboBox.getSelectedItem();
+							System.out.print(item);
+							boolean noProb = true;
 						
-						e1.printStackTrace();
-					}
+							 try {
+									Class.forName("com.mysql.cj.jdbc.Driver");
+									 con = DriverManager.getConnection("jdbc:mysql://localhost:3306/grubhub", "root", "");
+									 PreparedStatement PS = con.prepareStatement("UPDATE producttbl SET " + item + " = ? WHERE `Product ID` = ?" );
+									 UserDao check = new UserDao(con);
+									 			
+									 //Check if field is empty
+									 if(productidTF.getText().isEmpty()== true || newValue.isEmpty()) {
+										 
+			                                  warningLBL.setText("EMPTY FIELD");
+			                                  warningLBL.setVisible(true);
+			                                  noProb = false;
+			                                  
+									 } 
+									 
+									 if (check.isIdExists(productidTF.getText()) == false) {
+										 
+			                             warningLBL.setText("ID DOES NOT EXIST");
+			                             warningLBL.setVisible(true);
+			                             noProb = false;
+			                         
+									 } 
+									 
+									 if (noProb) {
+									  switch (item) {
+								        case "ProductName":
+								            PS.setString(1, newValue);
+								            break;
+								        case "Stock":
+								            PS.setInt(1, Integer.parseInt(newValue));
+								            break;
+								        case "Price":
+								            PS.setDouble(1, Double.parseDouble(newValue));
+								            break;
+								        case "Image":
+								            PS.setBytes(1, imageData);
+								            break;
+								        default:
+								            break;
+								    }
+								    
+								    PS.setInt(2, productID);
+								    int rowsUpdated = PS.executeUpdate();
+								    if (rowsUpdated > 0) {
+								        JOptionPane.showMessageDialog(null, "SUCCESSFULLY UPDATED");
+								        InventoryDBD invent = new InventoryDBD();
+										invent.onDataReceived("Admin");
+										invent.setLocationRelativeTo(null);
+										invent.setVisible(true);
+								        dispose();
+								        
+								    } else {
+								        warningLBL.setText("FAILED TO UPDATE");
+								        warningLBL.setVisible(true);
+								    }
+								   
+									 }	 
+									 } catch (ClassNotFoundException | SQLException e1) {
+									
+									e1.printStackTrace();
+								}
 					
 			
 				}

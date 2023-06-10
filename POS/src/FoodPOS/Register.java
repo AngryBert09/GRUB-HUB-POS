@@ -1,6 +1,7 @@
 package FoodPOS;
 
 import java.awt.EventQueue;
+
 import Des.*;
 import javax.swing.text.PlainDocument;
 
@@ -10,11 +11,14 @@ import java.sql.Connection;
 
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Arrays;
 import java.util.Date;
+import java.util.List;
+
 import javax.swing.text.AttributeSet;
 import javax.swing.text.BadLocationException;
 import javax.swing.ButtonGroup;
@@ -47,6 +51,10 @@ import javax.swing.JTextArea;
 
 public class Register extends JFrame {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	private JPanel contentPane;
 	private JTextField fnameTF;
 	private JTextField lnameTF;
@@ -295,138 +303,84 @@ public class Register extends JFrame {
 				String password = getTextFromField(passwordTF);
 				String rpassword = getTextFromField(rpasswordTF);
 				boolean allFieldsFilled = true;
-				
-			    try {
-					Class.forName("com.mysql.cj.jdbc.Driver");
-					 con = DriverManager.getConnection("jdbc:mysql://localhost:3306/grubhub", "root", "");
-					 PreparedStatement PS = con.prepareStatement("insert into userinfos (Firstname, Lastname,Gender,Birthday,Email,Username,Password)  VALUES (?,?,?,?,?,?,?)");
-			         UserDao user = new UserDao(con);
-			         
-			    
-					 for (JTextField textField : Arrays.asList(fnameTF, lnameTF, bdayTF, emailTF, passwordTF, rpasswordTF, unameTF)) {
-					     if (textField.getText().isEmpty()) {
-					         setTextFieldBorder(textField);
-					         warningLBL.setText("FILL UP REQUIRED FIELDS");
-					         warningLBL.setVisible(true);
-					         allFieldsFilled = false;
-					     }
-					 }
-					 
-					 //PROHIBITING FROM ENTERING ADMIN AND PASS credentials
-					 if(username.equalsIgnoreCase("superAdmin") && password.equalsIgnoreCase("adminadmin")) {
-						 warningLBL.setText("INVALID USER AND PASS");
-						 warningLBL.setVisible(true);
-						 allFieldsFilled = false;		 
-					 }
 
-					 // Check if a radio button is selected
-					 if (!maleRbutt.isSelected() && !femaleRbutt.isSelected()) {
-						 femaleRbutt.setBorder(new MatteBorder(1, 1, 1, 1, (Color) new Color(255, 0, 0)));
-						 maleRbutt.setBorder(new MatteBorder(1, 1, 1, 1, (Color) new Color(255, 0, 0)));  
-						}
+				List<JTextField> textFields = Arrays.asList(fnameTF, lnameTF, bdayTF, emailTF, passwordTF, rpasswordTF, unameTF);
 
-					 // Check if the email address is valid
-					 if (!email.matches("\\b[\\w.%-]+@[-.\\w]+\\.[A-Za-z]{2,4}\\b")) {
-						    setTextFieldBorder(emailTF);
-						    warningLBL.setText("Invalid Email");
-						    warningLBL.setVisible(true);
-						    allFieldsFilled = false;
-						}
-
-					 // Check if the password and re-entered password match
-					 if (!(password.equals(rpassword))) {
-					     setTextFieldBorder(passwordTF);
-					     setTextFieldBorder(rpasswordTF);
-					     warningLBL.setText("Passwords don't match. Please try again.");
-					     warningLBL.setVisible(true);
-					     passwordTF.setText("");
-					     rpasswordTF.setText("");
-					     allFieldsFilled = false;
-					     
-					 }
-					 
-					 // Check if the username already exist
-					 if(user.isUsernameExists(username) == true) {
-						 warningLBL.setText("This username exists. Create a new one");
-						 warningLBL.setVisible(true);
-						 allFieldsFilled = false;
-						 setTextFieldBorder(unameTF);
-					
-					 }
-					 
-				
-					
-					 // If all fields are filled, insert the data into the database
-					 if (allFieldsFilled == true) {
-					     try {
-					         // Set the values for the prepared statement
-					         String gender = maleRbutt.isSelected() ? "MALE" : "FEMALE";
-					         SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
-							 Date date = formatter.parse(bday);
-							 String formattedDate = formatter.format(date);
-							 
-
-					         PS.setString(1, fname);
-					         PS.setString(2, lname);
-					         PS.setString(3, gender);
-					         PS.setString(4, formattedDate);
-					         PS.setString(5, email);
-					         PS.setString(6, username);
-					         PS.setString(7, rpassword);
-
-					         // Execute the query and close the connection
-					         PS.executeUpdate();
-					         PS.close();
-					         con.close();
-
-					         // Show a success message and close the current window
-					         JOptionPane.showMessageDialog(null, "SUCCESSFULLY REGISTERED");
-					         dispose();
-
-					         // Open the login window
-					         Login log = new Login();
-					         log.setLocationRelativeTo(null);
-					         log.setVisible(true);
-						
-						
-						
-						
-						
-						
-					} catch (SQLException e1) {
-						// TODO Auto-generated catch block
-						e1.printStackTrace();
-					}
-			    	
-				}} catch (ClassNotFoundException | SQLException e1) {
-					// TODO Auto-generated catch block
-					e1.printStackTrace();
-				} catch (ParseException e2) {
-					// TODO Auto-generated catch block
-					e2.printStackTrace();
+				for (JTextField textField : textFields) {
+				    if (textField.getText().isEmpty()) {
+				        setTextFieldBorder(textField);
+				        warningLBL.setText("FILL UP REQUIRED FIELDS");
+				        warningLBL.setVisible(true);
+				        allFieldsFilled = false;
+				    }
 				}
-			    	
-			    	
-			    	
-			    	
-			    	
-			    	
-			    	
-			    	
-			    }
-			    
-			   
-				
-				
-				
-				
-				
-				
-				
-				
-				
-				
-		
+
+				if (!maleRbutt.isSelected() && !femaleRbutt.isSelected()) {
+				    femaleRbutt.setBorder(new MatteBorder(1, 1, 1, 1, (Color) new Color(255, 0, 0)));
+				    maleRbutt.setBorder(new MatteBorder(1, 1, 1, 1, (Color) new Color(255, 0, 0)));
+				    allFieldsFilled = false;
+				}
+
+				if (!email.matches("\\b[\\w.%-]+@[-.\\w]+\\.[A-Za-z]{2,4}\\b")) {
+				    setTextFieldBorder(emailTF);
+				    warningLBL.setText("Invalid Email");
+				    warningLBL.setVisible(true);
+				    allFieldsFilled = false;
+				}
+
+				if (!(password.equals(rpassword))) {
+				    setTextFieldBorder(passwordTF);
+				    setTextFieldBorder(rpasswordTF);
+				    warningLBL.setText("Passwords don't match. Please try again.");
+				    warningLBL.setVisible(true);
+				    passwordTF.setText("");
+				    rpasswordTF.setText("");
+				    allFieldsFilled = false;
+				}
+
+				if (allFieldsFilled) {
+					 try {
+					        Class.forName("com.mysql.cj.jdbc.Driver");
+					        con = DriverManager.getConnection("jdbc:mysql://localhost:3306/grubhub", "root", "");
+
+					        PreparedStatement insertInfo = con.prepareStatement("insert into userinfos (Firstname, Lastname, Gender, Birthday, Email, Username, Password, Type)  VALUES (?,?,?,?,?,?,?,?)");
+					        PreparedStatement checkUserExists = con.prepareStatement("SELECT Type FROM userinfos WHERE Type = 'Admin' OR Username = ?");
+					        checkUserExists.setString(1, username);
+					        ResultSet rs = checkUserExists.executeQuery();
+
+					        String userType = rs.next() ? "Employee" : "Admin";
+
+					        String gender = maleRbutt.isSelected() ? "MALE" : "FEMALE";
+					        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
+					        Date date = formatter.parse(bday);
+					        String formattedDate = formatter.format(date);
+
+					        insertInfo.setString(1, fname);
+					        insertInfo.setString(2, lname);
+					        insertInfo.setString(3, gender);
+					        insertInfo.setString(4, formattedDate);
+					        insertInfo.setString(5, email);
+					        insertInfo.setString(6, username);
+					        insertInfo.setString(7, rpassword);
+					        insertInfo.setString(8, userType);
+
+					        insertInfo.executeUpdate();
+					        insertInfo.close();
+					        con.close();
+
+					        JOptionPane.showMessageDialog(null, userType.equals("Admin") ? "ADMIN REGISTERED" : "SUCCESSFULLY REGISTERED");
+					        dispose();
+
+					        Login log = new Login();
+					        log.setLocationRelativeTo(null);
+					        log.setVisible(true);
+					    } catch (ClassNotFoundException | SQLException e1) {
+					        e1.printStackTrace();
+					    } catch (ParseException e2) {
+					        e2.printStackTrace();
+					    }
+				}
+			}
 		});
 		registerButt.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
 		registerButt.setBorder(new MatteBorder(1, 1, 1, 1, (Color) new Color(0, 0, 0)));

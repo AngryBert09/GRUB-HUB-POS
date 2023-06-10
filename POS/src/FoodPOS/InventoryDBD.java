@@ -1,6 +1,7 @@
 package FoodPOS;
 
 import java.awt.EventQueue;
+
 import Des.*;
 import java.awt.Image;
 import java.awt.geom.RoundRectangle2D;
@@ -43,7 +44,7 @@ import javax.swing.SwingWorker;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 
-public class InventoryDBD extends JFrame {
+public class InventoryDBD extends JFrame implements DataListener {
 
 	/**
 	 * 
@@ -52,7 +53,6 @@ public class InventoryDBD extends JFrame {
 	private JPanel contentPane;
 	private JTable table;
 	private JScrollPane scrollPane_1;
-	private JButton deleteButt;
 	private JTextField searchField;
 	private JButton salesButt;
 	private JButton cusinfoButt;
@@ -61,7 +61,11 @@ public class InventoryDBD extends JFrame {
     private long lastKeyPressTime;
     private static final long DELAY_MS = 10000; // Delay in milliseconds
     private DefaultTableModel productTableModel;
-   
+    private JButton addButt;
+    private JButton deleteButt;
+    private JButton updateButt;
+    private String data;
+    
 
 	/**
 	 * Launch the application.
@@ -82,9 +86,19 @@ public class InventoryDBD extends JFrame {
 	/**
 	 * Create the frame.
 	 */
+	
+	public void onDataReceived(String data) {
+        // Process the received data
+		this.data = data;
+		System.out.print("\nINVENTORY : " + data);
+        if(data.equals("Employee")) {
+        	addButt.setVisible(false);
+        	deleteButt.setVisible(false);
+        	updateButt.setVisible(false);
+        }
+    }
+
 	public InventoryDBD() {
-		
-		
 		  
 		setUndecorated(true);
 		setResizable(false);
@@ -115,20 +129,20 @@ public class InventoryDBD extends JFrame {
 	    
 	    table = new JTable(productTableModel);
 		table.setGridColor(Color.BLACK);
+		table.setRowHeight(40);
 		scrollPane_1.setViewportView(table);
 		  // Set custom cell renderer for the "Image" column
         table.getColumnModel().getColumn(4).setCellRenderer(new ImageRenderer());
   
 	    
 		
-		JButton addButt = new JButton("ADD ");
+	    addButt = new JButton("ADD ");
 		addButt.setFocusable(false);
 		addButt.setFocusPainted(false);
 		addButt.setFocusTraversalKeysEnabled(false);
 		addButt.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				
-				new OwnLib().spawnFrame(new addFrame());
+				new OwnLib().spawnFrame(new addFrame());			
 				dispose();
 			
 			}
@@ -142,7 +156,7 @@ public class InventoryDBD extends JFrame {
 		addButt.setBounds(333, 554, 89, 23);
 		contentPane.add(addButt);
 		
-		JButton updateButt = new JButton("UPDATE");
+	    updateButt = new JButton("UPDATE");
 		updateButt.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				
@@ -208,7 +222,11 @@ public class InventoryDBD extends JFrame {
 		cusinfoButt.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				dispose();
-				new OwnLib().spawnFrame(new CusInfoDBD());
+				CusInfoDBD cus = new CusInfoDBD();
+				cus.onDataReceived(data);
+				cus.setLocationRelativeTo(null);
+				cus.setVisible(true);
+				
 			}
 		});
 		cusinfoButt.setBorderPainted(false);
@@ -227,7 +245,10 @@ public class InventoryDBD extends JFrame {
 		salesButt.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				dispose();
-				new OwnLib().spawnFrame(new SalesDBD());
+				SalesDBD sales = new SalesDBD();
+				sales.onDataReceived(data);
+				sales.setLocationRelativeTo(null);
+				sales.setVisible(true);
 			}
 		});
 		salesButt.setBorderPainted(false);
@@ -247,7 +268,10 @@ public class InventoryDBD extends JFrame {
 		inventoryButt.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				dispose();
-				new OwnLib().spawnFrame(new InventoryDBD());
+				InventoryDBD invent = new InventoryDBD();
+				invent.onDataReceived(data);
+				invent.setLocationRelativeTo(null);
+				invent.setVisible(true);
 				
 			}
 		});
@@ -262,8 +286,8 @@ public class InventoryDBD extends JFrame {
 		inventoryButt.setBounds(0, 256, 112, 33);
 		new OwnLib().setHoverEffect(inventoryButt);
 		contentPane.add(inventoryButt);
-		
-		
+
+	
 		searchButt = new JButton("Search");
 		searchButt.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -341,7 +365,7 @@ public class InventoryDBD extends JFrame {
 	
 	    loadData();
       
-
+	  
 	
 	}
 	 private void loadData() {
@@ -397,9 +421,10 @@ public class InventoryDBD extends JFrame {
 	        }
 	    }
 	
-
+	
+}
 	
 	
 	
 
-	 }
+	 

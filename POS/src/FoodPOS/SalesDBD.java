@@ -36,11 +36,9 @@ import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 import javax.swing.SwingConstants;
 
-public class SalesDBD extends JFrame {
+public class SalesDBD extends JFrame implements DataListener{
 
-	/**
-	 * 
-	 */
+
 	private static final long serialVersionUID = 1L;
 
 	private JPanel contentPane;
@@ -49,18 +47,17 @@ public class SalesDBD extends JFrame {
 	    private int currentPage = 1;
 	    private JButton nextButt;
 	    private JButton prevButt;
-	 
-	   
-	
-	/**
-	 * Launch the application.
-	 */
+	    private String data;
+		
+	  
 	public static void main(String[] args) {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
+					
 					SalesDBD frame = new SalesDBD();
 					frame.setVisible(true);
+					
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
@@ -71,14 +68,24 @@ public class SalesDBD extends JFrame {
 	/**
 	 * Create the frame.
 	 */
+	@Override
+	public void onDataReceived(String data) {
+        // Process the received data
+		this.data = data;
+        System.out.println("\nReceived data: " + data);
+
+    }
+	
+	
+
 	public SalesDBD() {
+		
 		setUndecorated(true);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 800, 600);
 		setShape(new RoundRectangle2D.Double(0, 0, 800, 600,30, 30));
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
-
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
 		
@@ -100,13 +107,17 @@ public class SalesDBD extends JFrame {
 		orderTA.setFont(new Font("Bahnschrift", Font.BOLD, 13));
 		orderTA.setBackground(Color.PINK);
 		
-		
 		scrollPane.setViewportView(orderTA);
 		JButton btnNewButton = new JButton("PROCEED");
 		btnNewButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				PaymentGateway payment = new PaymentGateway();
+				payment.onDataReceived(data);
+				payment.setLocationRelativeTo(null);
+				payment.setVisible(true);
+				payment.setVisible(true);
 				dispose();
-				new OwnLib().spawnFrame(new PaymentGateway());
+				
 			}
 		});
 		btnNewButton.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
@@ -119,11 +130,16 @@ public class SalesDBD extends JFrame {
 		btnNewButton.setFont(new Font("Bahnschrift", Font.BOLD, 18));
 		btnNewButton.setBounds(546, 544, 264, 56);
 		contentPane.add(btnNewButton);
+		
 		JButton salesButt = new JButton("Sales");
 		salesButt.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+	
 				dispose();
-				new OwnLib().spawnFrame(new SalesDBD());
+				SalesDBD sales = new SalesDBD();
+				sales.onDataReceived(data);
+				sales.setLocationRelativeTo(null);
+				sales.setVisible(true);
 				
 			}
 		});
@@ -141,14 +157,16 @@ public class SalesDBD extends JFrame {
 		salesButt.setBounds(0, 205, 115, 33);
 		new OwnLib().setHoverEffect(salesButt);
 		contentPane.add(salesButt);
-		
+	
 		JButton inventoryButt = new JButton("Inventory");
 		inventoryButt.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				dispose();
-			    new OwnLib().spawnFrame(new InventoryDBD());
-			
 				
+					InventoryDBD invent = new InventoryDBD();
+					invent.setVisible(true);
+					invent.onDataReceived(data);
+					invent.setLocationRelativeTo(null);
+					dispose();
 				
 			}
 		});
@@ -169,7 +187,10 @@ public class SalesDBD extends JFrame {
 		cusinfoButt.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				dispose();
-				new OwnLib().spawnFrame(new CusInfoDBD());
+				CusInfoDBD cus = new CusInfoDBD();
+				cus.onDataReceived(data);
+				cus.setVisible(true);
+				cus.setLocationRelativeTo(null);
 				
 			}
 		});
@@ -318,7 +339,7 @@ public class SalesDBD extends JFrame {
 			try {
 				Class.forName("com.mysql.cj.jdbc.Driver");
 				Connection deleteConnection = DriverManager.getConnection("jdbc:mysql://localhost:3306/grubhub", "root", "");
-				Connection updateConnection = DriverManager.getConnection("jdbc:mysql://localhost:3306/grubhub", "root", "");
+		
 				
 				PreparedStatement deleteStatement = deleteConnection.prepareStatement("DELETE FROM queingtbl");
 				
@@ -379,7 +400,8 @@ public class SalesDBD extends JFrame {
 				
 				if(select == JOptionPane.YES_OPTION) {
 					
-					System.exit(0);
+					new OwnLib().spawnFrame(new Login());
+					dispose();
 					
 				}
 
@@ -392,7 +414,7 @@ public class SalesDBD extends JFrame {
 		btnNewButton_2.setFocusTraversalKeysEnabled(false);
 		btnNewButton_2.setFocusPainted(false);
 		btnNewButton_2.setBorder(new MatteBorder(1, 1, 1, 1, (Color) new Color(0, 0, 0)));
-		btnNewButton_2.setBounds(10, 524, 89, 23);
+		btnNewButton_2.setBounds(0, 0, 89, 23);
 		contentPane.add(btnNewButton_2);
 		
 		 
@@ -468,8 +490,11 @@ public class SalesDBD extends JFrame {
 		                // You can access the product ID, price, and stock variables within this scope	
 		                addQue add = new addQue();
 		                add.setData(ordata.getProductID(), ordata.getProductName(), ordata.getPrice(), ordata.getStock());
+		                add.onDataReceived(data);
+		                add.setLocationRelativeTo(null);
+		                add.setVisible(true);
 		                dispose();
-		            	new OwnLib().spawnFrame(add);
+		            	
 	
 		            }
 		            
@@ -580,7 +605,8 @@ public class SalesDBD extends JFrame {
 	        }
 	    
 	 
-}
+}    
+
 	 private BigDecimal Total;
 		
 		public void setSubtotal(BigDecimal roundedNumber) {
@@ -611,6 +637,10 @@ public class SalesDBD extends JFrame {
 	    	return connection;
 	    	
 	    }
+	    
+	    
+
+	
 	
 		
 }

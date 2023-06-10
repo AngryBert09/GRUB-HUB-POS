@@ -2,31 +2,22 @@ package FoodPOS;
 
 import java.awt.EventQueue;
 import Des.OwnLib;
-import java.awt.Image;
 import java.awt.geom.RoundRectangle2D;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-
-import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
-import javax.swing.border.Border;
 import javax.swing.border.EmptyBorder;
 import javax.swing.JLabel;
-import javax.swing.JOptionPane;
 import javax.swing.JTextField;
 import javax.swing.JPasswordField;
 import javax.swing.border.MatteBorder;
 import java.awt.Color;
 import javax.swing.JButton;
-import Des.*;
 import java.awt.Font;
-import javax.swing.border.CompoundBorder;
-import javax.swing.UIManager;
-import javax.swing.border.LineBorder;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 import javax.swing.SwingConstants;
@@ -39,9 +30,7 @@ import java.awt.event.KeyEvent;
 
 public class Login extends JFrame {
 
-	/**
-	 * 
-	 */
+
 	private static final long serialVersionUID = 1L;
 	private JPanel contentPane;
 	private JTextField unameTF;
@@ -49,6 +38,10 @@ public class Login extends JFrame {
 	private JButton registerButt;
 	private JLabel unShowICO;
 	private JLabel warningLBL;
+	
+	
+	
+	
 
 	/**
 	 * Launch the application.
@@ -57,8 +50,7 @@ public class Login extends JFrame {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					Login frame = new Login();
-				  
+					Login frame = new Login();			  
 					frame.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -72,7 +64,6 @@ public class Login extends JFrame {
 	 */
 	public Login() {
 		setUndecorated(true);
-		setVisible(true);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 720, 500);
 		contentPane = new JPanel();
@@ -115,23 +106,80 @@ public class Login extends JFrame {
 		passwordTF.setBounds(443, 230, 222, 29);
 		contentPane.add(passwordTF);
 		
+		
+		
+		
 		JButton loginButt = new JButton("LOGIN");
 		loginButt.addActionListener(new ActionListener() {
+		
 			public void actionPerformed(ActionEvent e) {
 				String username = unameTF.getText();
 				String password = passwordTF.getText();
-				 
-				   if (authenticate(username, password)) {
 				
-	                    dispose();
-	                    // Do something after successful login
-	                    new OwnLib().spawnFrame(new SalesDBD());
-	                } else {
-	                    warningLBL.setText("Invalid username or password. Please try again.");
-	                    warningLBL.setVisible(true);
-	                }
-	            }
-			
+				
+				 try {
+				        // Establish connection to the database
+				        Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/grubhub", "root", "");
+				     
+				        // Create SQL statement to check if the credentials exist in the database
+				        String query = "SELECT * FROM userinfos WHERE Username = ? AND Password = ?";
+				        PreparedStatement statement = connection.prepareStatement(query);
+				        statement.setString(1, username);
+				        statement.setString(2, password);
+				        ResultSet resultSet = statement.executeQuery();
+
+				        // Check if any matching rows were found
+				        boolean result = resultSet.next();
+				    
+				        
+				        // If a matching row is found, retrieve the "Type" column value
+				        if (result) {
+				            
+				        	String userType = resultSet.getString("Type");
+				        	
+				        	if(userType.equals("Employee")) {
+				        		
+				        		SalesDBD sales = new SalesDBD();
+				        		sales.onDataReceived(userType);
+				        		sales.setVisible(true);
+				                
+				                
+				                dispose();
+				        		
+				        	} else {
+				        		SalesDBD sales = new SalesDBD();
+				        		sales.onDataReceived(userType);
+				        		sales.setVisible(true);
+				                
+				        		
+				        		
+				        		
+				        	}
+				        	
+				            // Close the current frame
+				            dispose();
+				            
+			 	        } else {
+			 	        	
+			 	        	warningLBL.setText("Invalid Credentials. Please try again");
+			 	        	warningLBL.setVisible(true);
+			 	        	
+			 	        	
+			 	        }
+				        
+				      
+
+				        // Close the database connection and resources
+				        resultSet.close();
+				        statement.close();
+				        connection.close();
+				   
+				        
+				    } catch (SQLException e1) {
+				        e1.printStackTrace();
+				        
+				    }
+			}
 		});
 		loginButt.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
 		loginButt.setFocusable(false);
@@ -157,10 +205,7 @@ public class Login extends JFrame {
 				
 				new OwnLib().spawnFrame(new Register());
 				dispose();
-				
-				
-				
-				
+
 			}
 		});
 		registerButt.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
@@ -215,23 +260,9 @@ public class Login extends JFrame {
 	
 
 		}	
-	
-    private boolean authenticate(String username, String password) {
-        try (Connection conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/grubhub", "root", "");
-             PreparedStatement stmt = conn.prepareStatement("SELECT * FROM userinfos WHERE username = ? AND password = ?")) {
 
-            stmt.setString(1, username);
-            stmt.setString(2, password);
 
-            try (ResultSet rs = stmt.executeQuery()) {
-                return rs.next(); // Return true if the result set has at least one row
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-            JOptionPane.showMessageDialog(this, "An error occurred while attempting to login.");
-        }
-        return false;
-    }{
+		
 }
 
-}
+

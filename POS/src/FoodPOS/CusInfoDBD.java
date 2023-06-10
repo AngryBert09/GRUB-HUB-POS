@@ -38,7 +38,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 
-public class CusInfoDBD extends JFrame {
+public class CusInfoDBD extends JFrame implements DataListener {
 
 	private JPanel contentPane;
 	private JTable table;
@@ -54,6 +54,7 @@ public class CusInfoDBD extends JFrame {
 	private DefaultTableModel customerTableModel;
     private long lastKeyPressTime;
     private static final long DELAY_MS = 10000; // Delay in milliseconds
+    private String data;
 
 	/**
 	 * Launch the application.
@@ -77,6 +78,15 @@ public class CusInfoDBD extends JFrame {
 	/**
 	 * Create the frame.
 	 */
+	public void onDataReceived(String data) {
+        // Process the received data
+		this.data = data;
+		System.out.print("\nINVENTORY : " + data);
+        if(data.equals("Employee")) {
+        	deleteButt.setVisible(false);
+        	updateButt.setVisible(false);
+        }
+    }
 	public CusInfoDBD() {
 		setUndecorated(true);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -111,6 +121,8 @@ public class CusInfoDBD extends JFrame {
 				dispose();
 				SalesDBD sales = new SalesDBD();
 				sales.setLocationRelativeTo(null);
+				sales.onDataReceived(data);
+				sales.setLocationRelativeTo(null);
 				sales.setVisible(true);
 			}
 		});
@@ -131,6 +143,8 @@ public class CusInfoDBD extends JFrame {
 			public void actionPerformed(ActionEvent e) {
 				dispose();
 				CusInfoDBD customer = new CusInfoDBD();
+				customer.setLocationRelativeTo(null);
+				customer.onDataReceived(data);
 				customer.setLocationRelativeTo(null);
 				customer.setVisible(true);
 			}
@@ -153,10 +167,12 @@ public class CusInfoDBD extends JFrame {
 				dispose();
 				InventoryDBD inventory = new InventoryDBD();
 				inventory.setLocationRelativeTo(null);
+				inventory.onDataReceived(data);
+				inventory.setLocationRelativeTo(null);
 				inventory.setVisible(true);
 			}
 		});
-		inventoryButt.setBorderPainted(false);
+		inventoryButt.setBorderPainted(false);   
 		inventoryButt.setIcon(new ImageIcon(getClass().getResource("icons8-in-inventory-22.png")));
 		inventoryButt.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
 		inventoryButt.setContentAreaFilled(false);

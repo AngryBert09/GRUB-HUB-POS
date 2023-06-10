@@ -27,7 +27,7 @@ import javax.swing.SwingConstants;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 
-public class addQue extends JFrame {
+public class addQue extends JFrame implements DataListener {
 
 	/**
 	 * 
@@ -38,6 +38,7 @@ public class addQue extends JFrame {
 	JLabel productNameLBL;
 	JLabel priceLBL;
 	JLabel stockLBL;
+	private String data;
 	
 	private Connection con;
 
@@ -60,6 +61,13 @@ public class addQue extends JFrame {
 	/**
 	 * Create the frame.
 	 */
+	@Override
+	public void onDataReceived(String data) {
+        // Process the received data
+		this.data = data;
+        System.out.println("\nReceived data: " + data);
+
+    }
 	public addQue() {
 		setUndecorated(true);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -182,8 +190,11 @@ public class addQue extends JFrame {
 			              
 			                
 			                JOptionPane.showMessageDialog(null, "ADDED ORDER");
-			                dispose();
-			                new OwnLib().spawnFrame(new SalesDBD());
+			                SalesDBD sales = new SalesDBD();
+						    sales.onDataReceived(data);
+						    sales.setLocationRelativeTo(null);
+						    sales.setVisible(true);
+						    dispose();
 			              
 			               
 			                
@@ -203,8 +214,11 @@ public class addQue extends JFrame {
 			              
 			             
 			                JOptionPane.showMessageDialog(null, "ADDED ORDER");
-			                dispose();
-			                new OwnLib().spawnFrame(new SalesDBD());
+			                SalesDBD sales = new SalesDBD();
+						    sales.onDataReceived(data);
+						    sales.setLocationRelativeTo(null);
+						    sales.setVisible(true);
+						    dispose();
 			                
 			              
 			            }
@@ -232,24 +246,27 @@ public class addQue extends JFrame {
 		addButt.setBounds(241, 183, 89, 23);
 		contentPane.add(addButt);
 		
-		JButton btnNewButton_1 = new JButton("CANCEL");
-		btnNewButton_1.addActionListener(new ActionListener() {
+		JButton cancelButt = new JButton("CANCEL");
+		cancelButt.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+			    SalesDBD sales = new SalesDBD();
+			    sales.onDataReceived(data);
+			    sales.setLocationRelativeTo(null);
+			    sales.setVisible(true);
+			    dispose();
 				
-				dispose();
-				new OwnLib().spawnFrame(new SalesDBD());
 			}
 		});
-		btnNewButton_1.setBackground(Color.DARK_GRAY);
-		btnNewButton_1.setForeground(Color.WHITE);
-		btnNewButton_1.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
-		btnNewButton_1.setBorder(new MatteBorder(1, 1, 1, 1, (Color) new Color(0, 0, 0)));
-		btnNewButton_1.setFocusable(false);
-		btnNewButton_1.setFocusTraversalKeysEnabled(false);
-		btnNewButton_1.setFocusPainted(false);
-		btnNewButton_1.setFont(new Font("Bahnschrift", Font.PLAIN, 14));
-		btnNewButton_1.setBounds(140, 183, 89, 23);
-		contentPane.add(btnNewButton_1);
+		cancelButt.setBackground(Color.DARK_GRAY);
+		cancelButt.setForeground(Color.WHITE);
+		cancelButt.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+		cancelButt.setBorder(new MatteBorder(1, 1, 1, 1, (Color) new Color(0, 0, 0)));
+		cancelButt.setFocusable(false);
+		cancelButt.setFocusTraversalKeysEnabled(false);
+		cancelButt.setFocusPainted(false);
+		cancelButt.setFont(new Font("Bahnschrift", Font.PLAIN, 14));
+		cancelButt.setBounds(140, 183, 89, 23);
+		contentPane.add(cancelButt);
 		
 		JLabel BG = new JLabel("");
 		BG.setBounds(0, 0, 450, 249);

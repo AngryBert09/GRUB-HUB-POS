@@ -29,11 +29,12 @@ import java.awt.event.ActionEvent;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 
-public class deleteFrame extends JFrame {
+public class deleteFrame extends JFrame implements DataListener {
 
 	private JPanel contentPane;
 	private JTextField productidTF;
 	private Connection con;
+    
 
 	/**
 	 * Launch the application.
@@ -54,6 +55,14 @@ public class deleteFrame extends JFrame {
 	/**
 	 * Create the frame.
 	 */
+	@Override
+	public void onDataReceived(String data) {
+        // Process the received data
+		
+        System.out.println("\nReceived data: " + data);
+
+    }
+	
 	public deleteFrame() {
 		setUndecorated(true);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -120,7 +129,10 @@ public class deleteFrame extends JFrame {
 						    stmt.close();
 						    con.close();
 						    JOptionPane.showMessageDialog(null, "DELETED");
-						    new OwnLib().spawnFrame(new InventoryDBD());
+						    InventoryDBD invent = new InventoryDBD();
+							invent.onDataReceived("Admin");
+							invent.setLocationRelativeTo(null);
+							invent.setVisible(true);
 						    dispose();
 					
 					 }
@@ -149,7 +161,10 @@ public class deleteFrame extends JFrame {
 		JButton exitButt = new JButton("EXIT");
 		exitButt.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				new OwnLib().spawnFrame(new InventoryDBD());
+				InventoryDBD invent = new InventoryDBD();
+				invent.onDataReceived("Admin");
+				invent.setLocationRelativeTo(null);
+				invent.setVisible(true);
 				dispose();
 			}
 		});

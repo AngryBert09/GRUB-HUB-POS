@@ -22,7 +22,7 @@ import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.awt.event.ActionEvent;
 
-public class deleteCus extends JFrame {
+public class deleteCus extends JFrame implements DataListener {
 
 	/**
 	 * 
@@ -51,6 +51,14 @@ public class deleteCus extends JFrame {
 	/**
 	 * Create the frame.
 	 */
+	@Override
+	public void onDataReceived(String data) {
+        // Process the received data
+		
+        System.out.println("\nReceived data: " + data);
+
+    }
+	
 	public deleteCus() {
 		setUndecorated(true);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -68,7 +76,7 @@ public class deleteCus extends JFrame {
 		warningLBL.setBounds(63, 138, 403, 14);
 		contentPane.add(warningLBL);
 		
-		JLabel lblNewLabel = new JLabel("Product ID");
+		JLabel lblNewLabel = new JLabel("Customer ID");
 		lblNewLabel.setFont(new Font("Bahnschrift", Font.PLAIN, 11));
 		lblNewLabel.setBounds(77, 79, 94, 14);
 		contentPane.add(lblNewLabel);
@@ -117,7 +125,10 @@ public class deleteCus extends JFrame {
 							    stmt.close();
 							    con.close();
 							    JOptionPane.showMessageDialog(null, "DELETED");
-							    new OwnLib().spawnFrame(new InventoryDBD());
+							    CusInfoDBD cus = new CusInfoDBD();
+								cus.onDataReceived("Admin");
+								cus.setLocationRelativeTo(null);
+								cus.setVisible(true);
 							    dispose();
 						
 						 }
@@ -145,8 +156,11 @@ public class deleteCus extends JFrame {
 		JButton backButt = new JButton("BACK");
 		backButt.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				CusInfoDBD cus = new CusInfoDBD();
+				cus.onDataReceived("Admin");
+				cus.setLocationRelativeTo(null);
+				cus.setVisible(true);
 				dispose();
-				new OwnLib().spawnFrame(new CusInfoDBD());
 			}
 		});
 		backButt.setForeground(Color.WHITE);

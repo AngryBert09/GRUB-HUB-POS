@@ -32,7 +32,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 
-public class PaymentGateway extends JFrame {
+public class PaymentGateway extends JFrame implements DataListener {
 
 	/**
 	 * 
@@ -42,6 +42,7 @@ public class PaymentGateway extends JFrame {
 	private JTextField cusnameTF;
 	private JTextField contactTF;
 	private JTextField amountTF;
+	private String data;
 	
 private static final Color BORDER_COLOR = new Color(255, 0, 0);
 	
@@ -72,6 +73,13 @@ private static final Color BORDER_COLOR = new Color(255, 0, 0);
 	/**
 	 * Create the frame.
 	 */
+	@Override
+	public void onDataReceived(String data) {
+        // Process the received data
+		this.data = data;
+        System.out.println("\nReceived data: " + data);
+
+    }
 	public PaymentGateway() {
 		setUndecorated(true);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -272,7 +280,7 @@ private static final Color BORDER_COLOR = new Color(255, 0, 0);
 				            while (resultSet.next()) {
 				                String data = resultSet.getString("ProductName");
 				                rowData.append(data).append(", "); // Use a separator of your choice
-				               
+				               System.out.print(rowData);
 				                
 				                // You can modify the above line to include other columns if needed:
 				                // String data = resultSet.getString("ProductName") + ", " + resultSet.getString("column2") + ", ";
@@ -309,8 +317,11 @@ private static final Color BORDER_COLOR = new Color(255, 0, 0);
 				            deleteStatement.executeUpdate();
 
 				            
+				            endFrame end = new endFrame();
+				            end.onDataReceived(data);
+				            end.setLocationRelativeTo(null);
+				            end.setVisible(true);
 				            dispose();
-				            new OwnLib().spawnFrame(new endFrame());
 				        }
 				            
 				            // Close the result set, statements, and connections
@@ -387,8 +398,12 @@ private static final Color BORDER_COLOR = new Color(255, 0, 0);
 		JButton btnNewButton = new JButton("BACK");
 		btnNewButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				SalesDBD sales = new SalesDBD();
+				sales.onDataReceived(data);
+				sales.setLocationRelativeTo(null);
+				sales.setVisible(true);
 				dispose();
-				new OwnLib().spawnFrame(new SalesDBD());
+				
 			}
 		});
 		btnNewButton.setForeground(Color.WHITE);

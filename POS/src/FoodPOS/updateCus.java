@@ -22,7 +22,7 @@ import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.awt.event.ActionEvent;
 
-public class updateCus extends JFrame {
+public class updateCus extends JFrame implements DataListener {
 
 	private JPanel contentPane;
 	private JTextField productIdTF;
@@ -48,6 +48,15 @@ public class updateCus extends JFrame {
 	/**
 	 * Create the frame.
 	 */
+	@Override
+	public void onDataReceived(String data) {
+        // Process the received data
+		
+        System.out.println("\nReceived data: " + data);
+
+    }
+	
+	
 	public updateCus() {
 		setUndecorated(true);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -168,7 +177,10 @@ public class updateCus extends JFrame {
 				    int rowsUpdated = PS.executeUpdate();
 				    if (rowsUpdated > 0) {
 				        JOptionPane.showMessageDialog(null, "SUCCESSFULLY UPDATED");
-				        new OwnLib().spawnFrame(new CusInfoDBD());
+				        CusInfoDBD cus = new CusInfoDBD();
+						cus.onDataReceived("Admin");
+						cus.setLocationRelativeTo(null);
+						cus.setVisible(true);
 				        dispose();
 				        
 				    } else {
@@ -207,8 +219,12 @@ public class updateCus extends JFrame {
 		JButton backButt = new JButton("BACK");
 		backButt.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				CusInfoDBD cus = new CusInfoDBD();
+				cus.onDataReceived("Admin");
+				cus.setLocationRelativeTo(null);
+				cus.setVisible(true);
 				dispose();
-				new OwnLib().spawnFrame(new CusInfoDBD());
+				
 			}
 		});
 		backButt.setFocusable(false);
