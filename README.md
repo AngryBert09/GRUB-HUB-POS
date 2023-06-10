@@ -45,7 +45,9 @@ and run it using Administrator.
 
 ## UPDATES 
 --> ADD TWO USER TYPE
+
 --> FIX MISSING ICONS
+
 --> OPTIMIZE SOME CODES
 
 
