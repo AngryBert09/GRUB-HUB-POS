@@ -43,14 +43,19 @@ and run it using Administrator.
 --> Thats it.
 
 
+## UPDATES 
+--> ADD TWO USER TYPE
+
+--> FIX MISSING ICONS
+
+--> OPTIMIZE SOME CODES
 
 
 
- 
 ## Installation
 
 CLICK HERE : 
-https://www.mediafire.com/folder/h3mmtp2dt4mxg/GRUBHUB?fbclid=IwAR0Ep1hOoRJS5HzvY9Xp-NZJ64VSScb7ptAt3z_JPXgqs1SqSaSzOOoAViI
+UNAVAILABLE AS OF NOW
 
 
     
